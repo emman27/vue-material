@@ -140,10 +140,9 @@ export default entry => {
       ]
     },
     plugins: [
-      new webpack.DefinePlugin({
-        'process.env': {
-          NODE_ENV: '"production"'
-        }
+      new webpack.EnvironmentPlugin({
+        NODE_ENV: 'production',
+        DEBUG: false
       }),
       new webpack.optimize.ModuleConcatenationPlugin()
     ]
@@ -158,10 +157,25 @@ export default entry => {
         }),
         new webpack.optimize.UglifyJsPlugin({
           compress: {
-            warnings: false,
             screw_ie8: true,
+            warnings: false,
+            sequences: true,
+            properties: true,
+            dead_code: true,
+            drop_debugger: true,
+            unsafe: true,
+            conditionals: true,
+            comparisons: true,
+            evaluate: true,
+            booleans: true,
+            loops: true,
             unused: true,
-            dead_code: true
+            hoist_funs: true,
+            hoist_vars: true,
+            if_return: true,
+            join_vars: true,
+            cascade: true,
+            side_effects: true
           },
           output: {
             comments: false
@@ -202,6 +216,7 @@ export default entry => {
             test: /\.vue$/,
             loader: 'vue-loader',
             options: {
+              extractCSS: true,
               loaders: {
                 css: cssLoader,
                 scss: scssLoader

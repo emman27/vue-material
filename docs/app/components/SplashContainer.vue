@@ -1,5 +1,5 @@
 <template>
-  <transition name="splash-container" appear>
+  <transition name="splash-container">
     <div class="splash-container main-container" :class="{ centered }">
       <slot />
 
@@ -50,8 +50,7 @@
   .splash-container {
     margin: auto;
     padding: 16px;
-    transition: opacity .01s $md-transition-default-timing;
-    will-change: opacity;
+    transition: transform .3s $md-transition-default-timing;
   }
 
   .splash-container-leave-active {
@@ -59,7 +58,7 @@
   }
 
   .splash-container-enter {
-    opacity: 0;
+    transform: translate3D(0, 50px, 0);
   }
 
   .centered {

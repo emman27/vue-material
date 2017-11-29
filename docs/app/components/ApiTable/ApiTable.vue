@@ -1,17 +1,17 @@
 <template>
-  <div class="api-table">
+  <div class="api-table" :class="$mdActiveTheme">
     <table>
       <tr>
         <th v-for="heading in headings" :key="heading">{{ heading }}</th>
       </tr>
 
       <tr v-for="{ offset, name, type, options, usage, description, defaults, value, example } in props" :key="name">
-        <td :class="{ offset }">
-          <span class="prop-name">{{ name }}</span>
+        <td class="prop" :class="{ offset }">
+          <span class="prop-name" v-html="name"></span>
           <small class="prop-type" v-if="type">{{ type }}</small>
         </td>
 
-        <td class="description" v-html="description"></td>
+        <td class="description" v-if="description" v-html="description"></td>
         <td class="slot-options" v-if="options">
           <p class="option" v-for="({ name, description }, index) in options" :key="index">
             <code>{{ name }}: </code>
@@ -32,13 +32,15 @@
 </template>
 
 <script>
-export default {
-  name: 'ApiTable',
-  props: {
-    props: Array,
-    headings: Array
-  }
-}
+  import MdComponent from 'vue-material/core/MdComponent'
+
+  export default MdComponent({
+    name: 'ApiTable',
+    props: {
+      props: Array,
+      headings: Array
+    }
+  })
 </script>
 
 <style lang="scss" scoped>
@@ -57,28 +59,24 @@ export default {
     table-layout: auto;
     border-collapse: collapse;
     border-spacing: 0;
-    background-color: #fff;
     font-size: 13px;
     line-height: 18px;
   }
 
   tr:first-child {
-    background-color: $bg-color;
     font-weight: 500;
   }
 
   td,
   th {
     padding: 8px 16px;
-    border: 1px solid $border-color;
-    color: md-get-palette-color(grey, 800);
+    border: 1px solid;
     text-align: left;
     vertical-align: middle;
   }
 
   th {
     height: 40px;
-    color: md-get-palette-color(grey, 700);
     line-height: 23px;
 
     &:first-child {
@@ -94,17 +92,18 @@ export default {
     padding-left: 32px;
   }
 
+  .prop {
+    vertical-align: top;
+  }
+
   .prop-name {
     display: block;
     text-transform: lowercase;
   }
 
   .prop-type {
-    text-transform: capitalize;
-  }
-
-  .prop-type {
     color: md-get-palette-color(grey, 600);
+    text-transform: capitalize;
   }
 
   .slot-options {
@@ -120,7 +119,8 @@ export default {
     }
   }
 
-  .description {
+  .description,
+  .prop-name {
     >>> code {
       color: md-get-palette-color(red, A200);
       font-family: 'Roboto Mono', monospace;

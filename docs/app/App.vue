@@ -13,6 +13,14 @@
     </div>
 
     <main-footer />
+
+    <md-snackbar class="version-message" md-theme="default" :md-active.sync="message" :md-duration="Infinity">
+      <span>This site is for the Vue Material 1.0 beta.</span>
+      <div>
+        <md-button href="https://vue-material-old.netlify.com/" target="_blank">Visit old docs</md-button>
+        <md-button class="md-accent" @click="closeMessage">Dismiss</md-button>
+      </div>
+    </md-snackbar>
   </div>
 </template>
 
@@ -32,7 +40,8 @@
       MainFooter
     },
     data: () => ({
-      loading: false
+      loading: false,
+      message: false
     }),
     computed: {
       ...mapState({
@@ -45,6 +54,9 @@
       }
     },
     methods: {
+      closeMessage () {
+        this.message = false
+      },
       beforeRouteRender (to, from, next) {
         this.loading = true
         next()
@@ -56,12 +68,20 @@
     created () {
       this.$router.beforeEach(this.beforeRouteRender)
       this.$router.afterEach(this.afterRouteRender)
+    },
+    mounted () {
+      window.setTimeout(() => {
+        this.message = true
+      }, 2000)
     }
   }
 </script>
 
 <style lang="scss">
   @import "./themes/default";
+  @import "./themes/default-dark";
+  @import "./themes/light-green";
+  @import "./themes/dark-green";
   @import "./themes/dark";
   @import "./themes/demo";
 
@@ -103,6 +123,7 @@
 
   .container-wrapper {
     &:not(.splash) {
+      flex: 1;
       padding-left: 230px !important;
 
       @include md-layout-xsmall {
@@ -123,5 +144,11 @@
     right: 0;
     bottom: 0;
     left: 0;
+  }
+
+  .version-message {
+    .md-button:not(.md-accent) {
+      color: #fff;
+    }
   }
 </style>

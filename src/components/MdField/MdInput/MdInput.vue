@@ -3,7 +3,7 @@
     class="md-input"
     v-model="model"
     v-bind="attributes"
-    v-on="$listeners"
+    v-on="listeners"
     @focus="onFocus"
     @blur="onBlur">
 </template>
@@ -30,11 +30,20 @@
     computed: {
       toggleType () {
         return this.MdField.togglePassword
+      },
+      isPassword () {
+        return this.type === 'password'
+      },
+      listeners () {
+        return {
+          ...this.$listeners,
+          input: event => this.$emit('input', event.target.value)
+        }
       }
     },
     watch: {
       type (type) {
-        this.setPassword()
+        this.setPassword(this.isPassword)
       },
       toggleType (toggle) {
         if (toggle) {
@@ -47,24 +56,17 @@
     methods: {
       setPassword (state) {
         this.MdField.password = state
+        this.MdField.togglePassword = false
       },
-      methods: {
-        setPassword () {
-          this.MdField.password = this.type === 'password'
-        },
-        setTypePassword () {
-          this.$el.type = 'password'
-        },
-        setTypeText () {
-          this.$el.type = 'text'
-        }
+      setTypePassword () {
+        this.$el.type = 'password'
       },
-      created () {
-        this.setPassword()
+      setTypeText () {
+        this.$el.type = 'text'
       }
     },
     created () {
-      this.setPassword(this.type === 'password')
+      this.setPassword(this.isPassword)
     },
     beforeDestroy () {
       this.setPassword(false)
